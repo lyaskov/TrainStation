@@ -73,6 +73,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     API endpoint that allows orders to be viewed or edited.
     """
 
+    queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -88,7 +89,9 @@ class TicketViewSet(viewsets.ModelViewSet):
     API endpoint that allows tickets to be viewed or edited.
     """
 
+    queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return Ticket.objects.filter(order__user=self.request.user)
