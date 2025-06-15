@@ -1,0 +1,8 @@
+.github
+venv
+.flake8
+.gitignore
+Dockerfile
+docker-compose.yml
+db.sqlite3
+.idea
