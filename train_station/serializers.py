@@ -1,4 +1,7 @@
+from django.db import transaction
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+
 from .models import Station, Route, TrainType, Train, Crew, Journey, Order, Ticket
 
 
@@ -95,10 +98,23 @@ class TicketSerializer(serializers.ModelSerializer):
 
     journey_info = TicketJourneySerializer(source="journey", read_only=True)
     order_id = serializers.PrimaryKeyRelatedField(source="order", read_only=True)
+    order_created_at = serializers.SerializerMethodField()
 
     class Meta:
         model = Ticket
-        fields = "__all__"
+        fields = [
+            "id",
+            "order_id",
+            "order_created_at",
+            "cargo",
+            "seat",
+            "journey_info",
+        ]
+
+    def get_order_created_at(self, obj):
+        if obj.order:
+            return obj.order.created_at
+        return None
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -106,9 +122,59 @@ class OrderSerializer(serializers.ModelSerializer):
     Serializer for the Order model.
     """
 
-    tickets = OrderTicketSerializer(many=True, source="ticket_set", read_only=True)
-    user = serializers.StringRelatedField(read_only=True)
+    tickets = TicketSerializer(many=True, read_only=True)
 
     class Meta:
         model = Order
-        fields = "__all__"
+        fields = ["id", "tickets", "created_at"]
+
+
+class NestedTicketSerializer(serializers.ModelSerializer):
+    journey = serializers.PrimaryKeyRelatedField(queryset=Journey.objects.all())
+
+    class Meta:
+        model = Ticket
+        exclude = ["order"]
+
+
+class OrderCreateSerializer(serializers.ModelSerializer):
+    tickets = NestedTicketSerializer(many=True, required=True)
+
+    class Meta:
+        model = Order
+        fields = ["id", "created_at", "tickets"]
+
+    def validate(self, attrs):
+        tickets = attrs.get("tickets", [])
+        if not tickets:
+            raise ValidationError("Order must contain at least one ticket.")
+        seats = set()
+        for t in tickets:
+            key = (
+                t["journey"].id if hasattr(t["journey"], "id") else t["journey"],
+                t["cargo"],
+                t["seat"],
+            )
+            if key in seats:
+                raise ValidationError(
+                    f"Duplicate seat in request: journey={key[0]}, cargo={key[1]}, seat={key[2]}"
+                )
+            seats.add(key)
+        for journey, cargo, seat in seats:
+            if Ticket.objects.filter(journey=journey, cargo=cargo, seat=seat).exists():
+                raise ValidationError(
+                    f"Seat already taken: journey={journey}, cargo={cargo}, seat={seat}"
+                )
+        return attrs
+
+    def create(self, validated_data):
+        print("DEBUG validated_data:", validated_data)
+        tickets_data = validated_data.pop("tickets")
+        print("DEBUG tickets_data:", tickets_data)
+        user = self.context["request"].user
+
+        with transaction.atomic():
+            order = Order.objects.create(user=user, **validated_data)
+            for ticket_data in tickets_data:
+                Ticket.objects.create(order=order, **ticket_data)
+        return order

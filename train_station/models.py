@@ -96,9 +96,7 @@ class Order(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="orders"
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="orders"
     )
 
     def __str__(self):
@@ -114,7 +112,7 @@ class Ticket(models.Model):
     cargo = models.IntegerField()
     seat = models.IntegerField()
     journey = models.ForeignKey(Journey, on_delete=models.CASCADE)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, related_name="tickets", on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Ticket {self.id}: Journey {self.journey}, Cargo {self.cargo}, Seat {self.seat}"
