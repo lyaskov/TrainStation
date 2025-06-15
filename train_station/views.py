@@ -48,6 +48,7 @@ class TrainTypeViewSet(viewsets.ModelViewSet):
 
     queryset = TrainType.objects.all()
     serializer_class = TrainTypeSerializer
+    permission_classes = [permissions.IsAdminUser]
 
 
 class TrainViewSet(viewsets.ModelViewSet):
@@ -57,6 +58,7 @@ class TrainViewSet(viewsets.ModelViewSet):
 
     queryset = Train.objects.all()
     serializer_class = TrainSerializer
+    permission_classes = [permissions.IsAdminUser]
 
 
 class CrewViewSet(viewsets.ModelViewSet):
@@ -66,6 +68,7 @@ class CrewViewSet(viewsets.ModelViewSet):
 
     queryset = Crew.objects.all()
     serializer_class = CrewSerializer
+    permission_classes = [permissions.IsAdminUser]
 
 
 class JourneyViewSet(viewsets.ModelViewSet):
@@ -75,6 +78,7 @@ class JourneyViewSet(viewsets.ModelViewSet):
 
     queryset = Journey.objects.all()
     serializer_class = JourneySerializer
+    permission_classes = [permissions.IsAdminUser]
 
 
 class OrderViewSet(
