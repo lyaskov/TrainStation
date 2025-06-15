@@ -85,6 +85,39 @@ class JourneyViewSet(viewsets.ModelViewSet):
             return JourneyCreateSerializer
         return JourneySerializer
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        params = self.request.query_params
+
+        route = params.get("route")
+        if route:
+            queryset = queryset.filter(route_id=route)
+
+        train = params.get("train")
+        if train:
+            queryset = queryset.filter(train_id=train)
+
+        departure_time = params.get("departure_time")
+        if departure_time:
+            queryset = queryset.filter(departure_time=departure_time)
+
+        dep_from = params.get("dep_from")
+        dep_to = params.get("dep_to")
+        if dep_from:
+            queryset = queryset.filter(departure_time__gte=dep_from)
+        if dep_to:
+            queryset = queryset.filter(departure_time__lte=dep_to)
+
+        source = params.get("source")
+        if source:
+            queryset = queryset.filter(route__source_id=source)
+
+        destination = params.get("destination")
+        if destination:
+            queryset = queryset.filter(route__destination_id=destination)
+
+        return queryset
+
 
 class OrderViewSet(
     mixins.CreateModelMixin,
