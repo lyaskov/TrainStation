@@ -109,6 +109,16 @@ class JourneySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class JourneyCreateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for creating and updating Journey model.
+    """
+
+    class Meta:
+        model = Journey
+        fields = ["route", "train", "crew", "departure_time", "arrival_time"]
+
+
 class TicketJourneySerializer(serializers.ModelSerializer):
     route = RouteShortSerializer(read_only=True)
     train = TrainShortSerializer(read_only=True)

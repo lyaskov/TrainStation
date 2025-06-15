@@ -14,6 +14,7 @@ from .serializers import (
     OrderSerializer,
     TicketSerializer,
     OrderCreateSerializer,
+    JourneyCreateSerializer,
 )
 
 
@@ -77,8 +78,12 @@ class JourneyViewSet(viewsets.ModelViewSet):
     """
 
     queryset = Journey.objects.all()
-    serializer_class = JourneySerializer
     permission_classes = [permissions.IsAdminUser]
+
+    def get_serializer_class(self):
+        if self.action in ["create", "update", "partial_update"]:
+            return JourneyCreateSerializer
+        return JourneySerializer
 
 
 class OrderViewSet(
