@@ -40,7 +40,7 @@ class RouteShortSerializer(serializers.ModelSerializer):
         fields = ["route_name", "distance"]
 
     def get_route_name(self, obj):
-        return f"{obj}"
+        return f"{obj.source.name} - {obj.destination.name}"
 
 
 class RouteCreateSerializer(serializers.ModelSerializer):
@@ -77,7 +77,7 @@ class TrainSerializer(serializers.ModelSerializer):
 
 class TrainShortSerializer(serializers.ModelSerializer):
     """
-    Serializer for the Short Train model.
+    Serializer for displaying basic train info.
     """
 
     class Meta:
@@ -213,9 +213,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        print("DEBUG validated_data:", validated_data)
         tickets_data = validated_data.pop("tickets")
-        print("DEBUG tickets_data:", tickets_data)
         user = self.context["request"].user
 
         with transaction.atomic():
