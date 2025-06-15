@@ -43,6 +43,16 @@ class RouteShortSerializer(serializers.ModelSerializer):
         return f"{obj}"
 
 
+class RouteCreateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for creating new routes.
+    """
+
+    class Meta:
+        model = Route
+        fields = ["source", "destination", "distance"]
+
+
 class TrainTypeSerializer(serializers.ModelSerializer):
     """
     Serializer for the TrainType model.
