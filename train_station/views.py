@@ -23,6 +23,7 @@ class StationViewSet(viewsets.ModelViewSet):
 
     queryset = Station.objects.all()
     serializer_class = StationSerializer
+    permission_classes = [permissions.IsAdminUser]
 
 
 class RouteViewSet(viewsets.ModelViewSet):
