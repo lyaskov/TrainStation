@@ -28,6 +28,21 @@ class RouteSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class RouteShortSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Route model.
+    """
+
+    route_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Route
+        fields = ["route_name", "distance"]
+
+    def get_route_name(self, obj):
+        return f"{obj}"
+
+
 class TrainTypeSerializer(serializers.ModelSerializer):
     """
     Serializer for the TrainType model.
@@ -75,7 +90,7 @@ class JourneySerializer(serializers.ModelSerializer):
 
 
 class TicketJourneySerializer(serializers.ModelSerializer):
-    route = RouteSerializer(read_only=True)
+    route = RouteShortSerializer(read_only=True)
     train = TrainSerializer(read_only=True)
 
     class Meta:
