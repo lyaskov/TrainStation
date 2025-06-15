@@ -3,6 +3,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.viewsets import GenericViewSet
 
 from .models import Station, Route, TrainType, Train, Crew, Journey, Order, Ticket
+from .permissions import IsAdminOrReadOnly
 from .serializers import (
     StationSerializer,
     RouteSerializer,
@@ -78,7 +79,7 @@ class JourneyViewSet(viewsets.ModelViewSet):
     """
 
     queryset = Journey.objects.all()
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
 
     def get_serializer_class(self):
         if self.action in ["create", "update", "partial_update"]:
