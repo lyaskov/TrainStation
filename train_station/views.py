@@ -106,6 +106,9 @@ class RouteViewSet(viewsets.ModelViewSet):
             return RouteCreateSerializer
         return RouteSerializer
 
+    def get_queryset(self):
+        return Route.objects.select_related("source", "destination").all()
+
     @swagger_auto_schema(
         operation_summary="List all routes",
         operation_description="Retrieve a list of all available train routes. Admin access required.",
@@ -245,6 +248,9 @@ class TrainViewSet(viewsets.ModelViewSet):
     queryset = Train.objects.all()
     serializer_class = TrainSerializer
     permission_classes = [permissions.IsAdminUser]
+
+    def get_queryset(self):
+        return Train.objects.select_related("train_type").all()
 
     @swagger_auto_schema(
         operation_summary="List all trains",
@@ -506,6 +512,15 @@ class JourneyViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+
+        queryset = queryset.select_related(
+            "route",
+            "route__source",
+            "route__destination",
+            "train",
+            "train__train_type",
+        ).prefetch_related("crew")
+
         params = self.request.query_params
 
         route = params.get("route")
@@ -628,7 +643,11 @@ class OrderViewSet(
     def get_queryset(self):
         if getattr(self, "swagger_fake_view", False):
             return Order.objects.none()
-        return Order.objects.filter(user=self.request.user)
+        return Order.objects.filter(user=self.request.user).prefetch_related(
+            "tickets__journey__route__source",
+            "tickets__journey__route__destination",
+            "tickets__journey__train__train_type",
+        )
 
     @swagger_auto_schema(
         operation_summary="List all orders for the authenticated user",
@@ -690,7 +709,11 @@ class TicketViewSet(
     def get_queryset(self):
         if getattr(self, "swagger_fake_view", False):
             return Ticket.objects.none()
-        return Ticket.objects.filter(order__user=self.request.user)
+        return Ticket.objects.filter(order__user=self.request.user).prefetch_related(
+            "journey__route__source",
+            "journey__route__destination",
+            "journey__train__train_type",
+        )
 
     @swagger_auto_schema(
         operation_summary="List all tickets for the authenticated user",
