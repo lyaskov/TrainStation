@@ -65,6 +65,16 @@ class TrainSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class TrainShortSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Short Train model.
+    """
+
+    class Meta:
+        model = Train
+        fields = ["id", "name"]
+
+
 class CrewSerializer(serializers.ModelSerializer):
     """
     Serializer for the Crew model.
@@ -91,7 +101,7 @@ class JourneySerializer(serializers.ModelSerializer):
 
 class TicketJourneySerializer(serializers.ModelSerializer):
     route = RouteShortSerializer(read_only=True)
-    train = TrainSerializer(read_only=True)
+    train = TrainShortSerializer(read_only=True)
 
     class Meta:
         model = Journey
