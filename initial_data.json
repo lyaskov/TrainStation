@@ -1,0 +1,182 @@
+[
+{
+  "model": "train_station.station",
+  "pk": 1,
+  "fields": {
+    "name": "Kyiv",
+    "latitude": 50.4501,
+    "longitude": 30.5234
+  }
+},
+{
+  "model": "train_station.station",
+  "pk": 2,
+  "fields": {
+    "name": "Lviv",
+    "latitude": 49.8397,
+    "longitude": 24.0297
+  }
+},
+{
+  "model": "train_station.station",
+  "pk": 3,
+  "fields": {
+    "name": "Odesa",
+    "latitude": 46.4825,
+    "longitude": 30.7233
+  }
+},
+{
+  "model": "train_station.route",
+  "pk": 1,
+  "fields": {
+    "source": 1,
+    "destination": 2,
+    "distance": 540
+  }
+},
+{
+  "model": "train_station.route",
+  "pk": 2,
+  "fields": {
+    "source": 1,
+    "destination": 3,
+    "distance": 475
+  }
+},
+{
+  "model": "train_station.route",
+  "pk": 3,
+  "fields": {
+    "source": 2,
+    "destination": 3,
+    "distance": 790
+  }
+},
+{
+  "model": "train_station.traintype",
+  "pk": 1,
+  "fields": {
+    "name": "Passenger"
+  }
+},
+{
+  "model": "train_station.traintype",
+  "pk": 2,
+  "fields": {
+    "name": "Freight"
+  }
+},
+{
+  "model": "train_station.train",
+  "pk": 1,
+  "fields": {
+    "name": "Train 101",
+    "cargo_num": 5,
+    "places_in_cargo": 20,
+    "train_type": 1
+  }
+},
+{
+  "model": "train_station.train",
+  "pk": 2,
+  "fields": {
+    "name": "Train 202",
+    "cargo_num": 10,
+    "places_in_cargo": 30,
+    "train_type": 2
+  }
+},
+{
+  "model": "train_station.crew",
+  "pk": 1,
+  "fields": {
+    "first_name": "Ivan",
+    "last_name": "Petrov"
+  }
+},
+{
+  "model": "train_station.crew",
+  "pk": 2,
+  "fields": {
+    "first_name": "Anna",
+    "last_name": "Koval"
+  }
+},
+{
+  "model": "train_station.journey",
+  "pk": 1,
+  "fields": {
+    "route": 1,
+    "train": 1,
+    "departure_time": "2025-06-15T08:00:00Z",
+    "arrival_time": "2025-06-15T14:00:00Z",
+    "crew": [
+      1,
+      2
+    ]
+  }
+},
+{
+  "model": "train_station.order",
+  "pk": 1,
+  "fields": {
+    "created_at": "2025-06-14T12:00:00Z",
+    "user": 2
+  }
+},
+{
+  "model": "train_station.ticket",
+  "pk": 1,
+  "fields": {
+    "cargo": 1,
+    "seat": 5,
+    "journey": 1,
+    "order": 1
+  }
+},
+{
+  "model": "train_station.ticket",
+  "pk": 2,
+  "fields": {
+    "cargo": 1,
+    "seat": 6,
+    "journey": 1,
+    "order": 1
+  }
+},
+{
+  "model": "user.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$tOtsod3jrFcZESDT5AFofL$bmiiqmkRwsSNC98DPDEGotgj3Rt+ibFc6YNHg8MuACE=",
+    "last_login": "2025-06-14T10:09:39.483Z",
+    "is_superuser": true,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2025-06-13T21:45:47.389Z",
+    "email": "admin@admin.com",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$D0EjwpYjRA7A66zoGshdCo$yLcMFxGGHVJuYi/tCKSr9Z+VcDPZ1XOwg4jq8OLY3SA=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-06-14T13:55:21.128Z",
+    "email": "user1@user.com",
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]
