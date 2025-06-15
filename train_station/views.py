@@ -33,6 +33,7 @@ class RouteViewSet(viewsets.ModelViewSet):
     """
 
     queryset = Route.objects.all()
+    permission_classes = [permissions.IsAdminUser]
 
     def get_serializer_class(self):
         if self.action == "create" or self.action == "update":
